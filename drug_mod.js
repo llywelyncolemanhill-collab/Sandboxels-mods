@@ -1,7 +1,10 @@
-// --- CODES VERIFIED ACCORDING TO OFFICIAL SANDBOXELS DOCS ---
+/* =========================================
+   OFFICIAL SANDBOXELS COMPATIBLE FORMAT
+   ========================================= */
 
-// Liquids (category must be strictly "liquids")
-elements.methylamine = {
+// --- LIQUIDS CATEGORY ---
+elements.ma = {
+    name: "Methylamine",
     color: "#e3f2fd",
     behavior: behaviors.LIQUID,
     category: "liquids",
@@ -9,7 +12,8 @@ elements.methylamine = {
     density: 699
 };
 
-elements.phenylacetone = {
+elements.pa = {
+    name: "Phenylacetone",
     color: "#fff9c4",
     behavior: behaviors.LIQUID,
     category: "liquids",
@@ -17,26 +21,36 @@ elements.phenylacetone = {
     density: 1020
 };
 
-elements.whiskey = {
+elements.wk = {
+    name: "Whiskey",
     color: "#b5651d",
     behavior: behaviors.LIQUID,
     category: "liquids",
     state: "liquid",
     density: 920,
-    desc: "Distilled amber alcohol."
+    desc: "Highly flammable alcohol.",
+    tick: function(pixel) {
+        if (pixel.temp > 80 && !pixel.burning) {
+            pixel.burning = true;
+            pixel.burnStart = pixelTicks;
+        }
+    },
+    burn: 80,
+    burnTime: 4000
 };
 
-elements.liquid_medicine = {
+elements.lm = {
+    name: "Liquid Medicine",
     color: "#b2dfdb",
     behavior: behaviors.LIQUID,
     category: "liquids",
     state: "liquid",
-    density: 1020,
-    desc: "A soothing medicinal syrup."
+    density: 1020
 };
 
-// Solids (Powders go into "energy", blocks go into "solids")
-elements.meth = {
+// --- POWDERS CATEGORY ---
+elements.me = {
+    name: "Meth",
     color: "#ffffff",
     behavior: behaviors.POWDER,
     category: "energy",
@@ -44,7 +58,8 @@ elements.meth = {
     density: 1200
 };
 
-elements.blue_sky = {
+elements.bs = {
+    name: "Blue Sky",
     color: "#00b0ff",
     behavior: behaviors.POWDER,
     category: "energy",
@@ -52,33 +67,44 @@ elements.blue_sky = {
     density: 1200
 };
 
-elements.panadol = {
+elements.pd = {
+    name: "Panadol",
     color: "#ffffff",
     behavior: behaviors.POWDER,
     category: "energy",
     state: "solid",
-    density: 1200,
-    desc: "Pain reliever tablet."
+    density: 1200
 };
 
-elements.nurofen = {
+elements.nr = {
+    name: "Nurofen",
     color: "#ffeb3b",
     behavior: behaviors.POWDER,
     category: "energy",
     state: "solid",
-    density: 1100,
-    desc: "Anti-inflammatory pill."
+    density: 1100
 };
 
-elements.forest_herb = {
+elements.fh = {
+    name: "Forest Herb",
     color: "#2e7d32",
     behavior: behaviors.POWDER,
     category: "energy",
     state: "solid",
-    density: 400
+    density: 400,
+    tick: function(pixel) {
+        if (pixel.temp > 120 && !pixel.burning) {
+            pixel.burning = true;
+            pixel.burnStart = pixelTicks;
+        }
+    },
+    burn: 30,
+    burnTime: 6000
 };
 
-elements.cigarette = {
+// --- SOLIDS CATEGORY ---
+elements.cg = {
+    name: "Cigarette",
     color: "#f5f5f5",
     behavior: behaviors.WALL,
     category: "solids",
@@ -86,20 +112,26 @@ elements.cigarette = {
     density: 300
 };
 
-elements.smoking_cigarette = {
+elements.sc = {
+    name: "Smoking Cigarette",
     color: "#ff3d00",
-    behavior: [
-        "XX|CR:smoke%0.5|XX",
-        "XX|XX|XX",
-        "XX|XX|XX"
-    ],
+    behavior: behaviors.WALL,
     category: "solids",
     state: "solid",
-    density: 300
+    density: 300,
+    tick: function(pixel) {
+        if (Math.random() < 0.2) {
+            var upY = pixel.y - 1;
+            if (isEmpty(pixel.x, upY)) {
+                createPixel("smoke", pixel.x, upY);
+            }
+        }
+    }
 };
 
-// Gases (category must be strictly "gases")
-elements.herbal_incense = {
+// --- GASES CATEGORY ---
+elements.hi = {
+    name: "Herbal Incense",
     color: "#a5d6a7",
     behavior: behaviors.GAS,
     category: "gases",
@@ -107,86 +139,77 @@ elements.herbal_incense = {
     density: 1
 };
 
-// Life (category must be strictly "life")
-elements.dizzy_human = {
+// --- LIFE CATEGORY ---
+elements.dh = {
+    name: "Dizzy Human",
     color: "#a7ffeb",
-    behavior: [
-        "M2|M1|M2",
-        "M1|XX|M1",
-        "M2|M1|M2"
-    ],
+    behavior: ["M2|M1|M2", "M1|XX|M1", "M2|M1|M2"],
     category: "life",
     state: "solid",
     density: 1000
 };
 
-elements.relaxed_human = {
+elements.rh = {
+    name: "Relaxed Human",
     color: "#c8e6c9",
-    behavior: [
-        "XX|XX|XX",
-        "M1%0.1|XX|M1%0.1",
-        "XX|M1%0.2|XX"
-    ],
+    behavior: ["XX|XX|XX", "M1%0.1|XX|M1%0.1", "XX|M1%0.2|XX"],
     category: "life",
     state: "solid",
     density: 1000
 };
 
-elements.drunk_human = {
+elements.drh = {
+    name: "Drunk Human",
     color: "#ffccbc",
-    behavior: [
-        "XX|XX|XX",
-        "M1%0.3|XX|M1%0.3",
-        "M2%0.4|M1|M2%0.4"
-    ],
+    behavior: ["XX|XX|XX", "M1%0.3|XX|M1%0.3", "M2%0.4|M1|M2%0.4"],
     category: "life",
     state: "solid",
     density: 1000
 };
 
-// --- REACTIONS ---
-reactions.phenylacetone = {
-    "methylamine": { elem1: "meth", elem2: "meth", chance: 0.5 }
+// --- CHEMICAL REACTION CODES ---
+reactions.pa = {
+    "ma": { elem1: "me", elem2: "me", chance: 0.5 }
 };
-reactions.meth = {
-    "fire": { elem1: "blue_sky", chance: 0.3 },
-    "lava": { elem1: "blue_sky", chance: 0.5 }
+reactions.me = {
+    "fire": { elem1: "bs", chance: 0.3 },
+    "torch": { elem1: "bs", chance: 0.5 },
+    "lava": { elem1: "bs", chance: 0.5 }
 };
-reactions.cigarette = {
-    "fire": { elem1: "smoking_cigarette", chance: 0.9 },
-    "torch": { elem1: "smoking_cigarette", chance: 0.9 }
+reactions.cg = {
+    "fire": { elem1: "sc", chance: 0.9 },
+    "torch": { elem1: "sc", chance: 0.9 }
 };
-reactions.smoking_cigarette = {
-    "human": { elem1: "smoking_cigarette", elem2: "dizzy_human", chance: 0.8 },
-    "head": { elem1: "smoking_cigarette", elem2: "dizzy_human", chance: 0.8 },
-    "body": { elem1: "smoking_cigarette", elem2: "dizzy_human", chance: 0.8 }
+reactions.sc = {
+    "human": { elem1: "sc", elem2: "dh", chance: 0.8 },
+    "head": { elem1: "sc", elem2: "dh", chance: 0.8 },
+    "body": { elem1: "sc", elem2: "dh", chance: 0.8 }
 };
-reactions.forest_herb = {
-    "fire": { elem1: "herbal_incense", chance: 0.5 },
-    "torch": { elem1: "herbal_incense", chance: 0.8 }
+reactions.fh = {
+    "fire": { elem1: "hi", chance: 0.5 },
+    "torch": { elem1: "hi", chance: 0.8 }
 };
-reactions.herbal_incense = {
-    "human": { elem1: "herbal_incense", elem2: "relaxed_human", chance: 0.7 },
-    "head": { elem1: "herbal_incense", elem2: "relaxed_human", chance: 0.7 }
+reactions.hi = {
+    "human": { elem1: "hi", elem2: "rh", chance: 0.7 },
+    "head": { elem1: "hi", elem2: "rh", chance: 0.7 }
 };
-reactions.panadol = {
-    "water": { elem1: "liquid_medicine", elem2: "liquid_medicine", chance: 0.6 },
-    "dizzy_human": { elem1: "panadol", elem2: "human", chance: 1.0 },
-    "relaxed_human": { elem1: "panadol", elem2: "human", chance: 1.0 },
-    "drunk_human": { elem1: "panadol", elem2: "human", chance: 1.0 }
+reactions.pd = {
+    "water": { elem1: "lm", elem2: "lm", chance: 0.6 },
+    "dh": { elem1: "pd", elem2: "human", chance: 1.0 },
+    "rh": { elem1: "pd", elem2: "human", chance: 1.0 },
+    "drh": { elem1: "pd", elem2: "human", chance: 1.0 }
 };
-reactions.nurofen = {
-    "water": { elem1: "liquid_medicine", elem2: "liquid_medicine", chance: 0.6 },
-    "dizzy_human": { elem1: "nurofen", elem2: "human", chance: 1.0 },
-    "relaxed_human": { elem1: "nurofen", elem2: "human", chance: 1.0 },
-    "drunk_human": { elem1: "nurofen", elem2: "human", chance: 1.0 }
+reactions.nr = {
+    "water": { elem1: "lm", elem2: "lm", chance: 0.6 },
+    "dh": { elem1: "nr", elem2: "human", chance: 1.0 },
+    "rh": { elem1: "nr", elem2: "human", chance: 1.0 },
+    "drh": { elem1: "nr", elem2: "human", chance: 1.0 }
 };
 reactions.wheat = {
-    "water": { elem1: "whiskey", elem2: "whiskey", chance: 0.1 }
+    "water": { elem1: "wk", elem2: "wk", chance: 0.1 }
 };
-reactions.whiskey = {
-    "fire": { elem1: "fire", elem2: "fire", chance: 0.8 },
-    "human": { elem1: "water", elem2: "drunk_human", chance: 0.9 },
-    "head": { elem1: "water", elem2: "drunk_human", chance: 0.9 },
-    "body": { elem1: "water", elem2: "drunk_human", chance: 0.9 }
+reactions.wk = {
+    "human": { elem1: "water", elem2: "drh", chance: 0.9 },
+    "head": { elem1: "water", elem2: "drh", chance: 0.9 },
+    "body": { elem1: "water", elem2: "drh", chance: 0.9 }
 };
