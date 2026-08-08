@@ -1,11 +1,11 @@
 // breaking_sandboxels.js
-// Fixed to use the same short element IDs as drug_mod.js (pa, ma, bs)
-// and to register reactions on those IDs so the mod works together with drug_mod.js
+// Ensure the two liquids (Methylamine & Phenylacetone) have full "liquid" properties
 
 // Ensure elements object exists
 if (typeof elements === "undefined") window.elements = {};
 
-elements.ma = {
+// Define Methylamine (short id: ma) with liquid properties
+elements.ma = elements.ma || {
     name: "Methylamine",
     color: "#e3f2fd",
     behavior: "LIQUID",
@@ -14,7 +14,8 @@ elements.ma = {
     density: 699
 };
 
-elements.pa = {
+// Define Phenylacetone (short id: pa) with liquid properties
+elements.pa = elements.pa || {
     name: "Phenylacetone",
     color: "#fff9c4",
     behavior: "LIQUID",
@@ -23,7 +24,8 @@ elements.pa = {
     density: 1020
 };
 
-elements.bs = {
+// Blue crystals (powder) — unchanged
+elements.bs = elements.bs || {
     name: "Blue Sky",
     color: "#00b0ff",
     behavior: "POWDER",
@@ -32,11 +34,9 @@ elements.bs = {
     density: 1200
 };
 
-// Ensure reactions object exists and register reaction on the short IDs
+// Ensure reactions exist and register pa <-> ma -> bs
 if (typeof reactions === "undefined") window.reactions = {};
 reactions.pa = reactions.pa || {};
-reactions.pa.ma = { elem1: "bs", elem2: "bs", chance: 0.8 };
-
-// Reciprocal (some engines check both sides)
+reactions.pa.ma = reactions.pa.ma || { elem1: "bs", elem2: "bs", chance: 0.8 };
 reactions.ma = reactions.ma || {};
-reactions.ma.pa = { elem1: "bs", elem2: "bs", chance: 0.8 };
+reactions.ma.pa = reactions.ma.pa || { elem1: "bs", elem2: "bs", chance: 0.8 };
