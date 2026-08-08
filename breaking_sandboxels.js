@@ -1,21 +1,21 @@
 elements.methylamine = {
     color: "#e3f2fd",
-    behavior: "LIQUID",
+    behavior: behaviors.LIQUID,
     category: "liquids"
 };
 
 elements.phenylacetone = {
     color: "#fff9c4",
-    behavior: "LIQUID",
+    behavior: behaviors.LIQUID,
     category: "liquids"
 };
 
 elements.blue_crystals = {
     color: "#00b0ff",
-    behavior: "POWDER",
-    category: "solids"
+    behavior: behaviors.POWDER,
+    category: "powders"
 };
 
 reactions.phenylacetone = {
-    "methylamine": { elem1: "blue_crystals", elem2: "blue_crystals", chance: 0.8 }
+    methylamine: { elem1: "blue_crystals", elem2: "blue_crystals", chance: 0.8 }
 };
